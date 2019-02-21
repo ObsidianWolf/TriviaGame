@@ -4,7 +4,7 @@
     padding: 0;
 }
 
-body {
+    body {
     background-image: url("../images/MarvelFeatured.jpg");
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -18,8 +18,10 @@ body {
 .glass1{
     background: inherit;
     border-radius: 2%;
-    width: 550px;
-    height: 300px;
+    /* width: 550px;
+    height: 300px; */
+    width: 572px;
+    height: 328px;
     position: absolute;
     top: 30vh;
     left: 30vw;
@@ -31,8 +33,10 @@ body {
     content:'';
     background: inherit;
     position: absolute;
-    width: 600px;
-    height: 350px;
+    /* width: 600px;
+    height: 350px; */
+    width: 622px;
+    height:378px;
     left: -25px;  
     right: 0;
     top: -25px;   
@@ -56,7 +60,7 @@ h1{
 }
 
 #timer{
-    font-size: 37px;
+    font-size: 30px;
     -webkit-text-fill-color: yellow;
     -webkit-text-stroke: 1px black;
 }

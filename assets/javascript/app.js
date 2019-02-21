@@ -19,7 +19,7 @@ var data =
 
         {
             "question": "When does Bruce Banner become the Hulk?",
-            "answers": ["When he’s Sad", "When he can’t find the remote", "When he eats spinach", "When he’s goes to bed"],
+            "answers": ["When he’s Sad", "When he can't find the remote", "When he eats spinach", "When he’s goes to bed"],
             "correct": "When he can't find the remote",
             "gif": "assets/gifImages/hulk1.gif" // link to the image
         },
@@ -80,6 +80,8 @@ var data =
 
 console.log(data);
 
+var fail = "assets/gifImages/faildance2.gif"
+
 var counter = 0;
 
 var intervalId;
@@ -108,23 +110,33 @@ function countDown() {
 
     $("#timer").text(timer)
 
-    if(timer === 0){
+    if (timer === 0) {
+
+        unanswered++;
+
+        incorrect++;
 
         counter++;
 
-        timer = 30;
+        if (wasLastQuestion()) {
+            endGame();
+        } else {
+            timer = 30;
 
-        showquestion();
+            showquestion();
 
-        run();
-    
+            run();
+        }
+
     }
-    
+
 }
 
 function run() {
     clearInterval(intervalId);
-    intervalId = setInterval(countDown, 999); 
+    timer = 30;
+    $("#timer").text(timer)
+    intervalId = setInterval(countDown, 1000);
 }
 
 function stop() {
@@ -132,9 +144,22 @@ function stop() {
 }
 
 
+
 $("#start").click(function () {
     //once the start button is clicked we hide it and display the timer
     $("#start").hide();
+
+    $("#timer").show();
+
+    $("#gameSoFar").html('');
+
+    correct = 0;
+
+    incorrect = 0;
+
+    unanswered = 0;
+
+    counter = 0;
 
     //this will set our timer to start when the start button is pressed
     run();
@@ -145,9 +170,7 @@ $("#start").click(function () {
 
 function showquestion() {
 
-    $("#questions").empty();
-
-    $("#answers").empty();
+    clearBoard();
 
     current = data[counter];
 
@@ -174,41 +197,96 @@ function showquestion() {
 
 function showCorrectGif() {
 
-    $("#questions").empty();
+    clearBoard();
 
-    $("#answers").empty(); 
-
-    current = data[counter];
+    $("#timer").text("YES!!!");
 
     // current.audio.play();
     var gif = $("<img>").attr("src", current.gif);
 
-    $("#questions").append(gif);    
+    $("#questions").append(gif);
+}
+
+function showIncorrectGif() {
+    clearBoard();
+
+    $("#timer").text("Fail...");
+
+    var failGif = $("<img>").attr("src", fail);
+
+    $("#questions").append(failGif);
+}
+
+function clearBoard() {
+    $("#timer").empty();
+
+    $("#questions").empty();
+
+    $("#answers").empty();
+}
+
+function wasLastQuestion() {
+    return counter === data.length;
+}
+
+function endGame() {
+    console.log("Your Game is Over!");
+
+    $("#timer").hide();
+    // let br = $("br");
+    clearBoard();
+    console.log(`Correct: ${correct}`);
+    $("#gameSoFar").html(`Correct: ${correct}` + '<br />' + `Incorrect: ${incorrect}` + '<br />' + `Unanswered: ${unanswered}`);
+    $("#start").show();
 }
 
 
 
 // click function for your .answerBtn class, check the data-value of the clicked button to correct
-$(document).on("click", ".answerBtn", function(){
+$(document).on("click", ".answerBtn", function () {
     console.log("click");
     console.log($(this).attr('data-value'));
     var guess = $(this).attr('data-value');
-    if(guess === current.correct){
+    if (guess === current.correct) {
         console.log("correct!")
+
         // User guessed correct
         showCorrectGif();
         counter++;
         // Increment correct guess
         correct++;
-        // Increment counter to progress to the next question
-        // Start your timer again now that the time is set to 31
         stop();
-    } else {
-        console.log("uncorrect!")
+        timeoutId = setTimeout(function () {
+            console.log(wasLastQuestion());
+            if (wasLastQuestion()) {
+                endGame();
+            } else {
+                showquestion();
+                run();
+            }
+        }, 3000);
+
+    }
+
+    if (guess !== current.correct) {
+        console.log("incorrect!")
         // User guessed wrong
+        showIncorrectGif();
+        counter++;
         incorrect++;
-        showquestion();
-        run();
+        stop();
+        timeoutId = setTimeout(function () {
+            console.log(wasLastQuestion());
+            if (wasLastQuestion()) {
+                endGame();
+            } else {
+                showquestion();
+                run();
+            }
+        }, 3000);
+
     }
 
 });
+
+//show what you want
