@@ -11,7 +11,4 @@ the **wrong option.**
 
 After a few seconds, display the next question after evaluation has taken place.
 
-
-
-
-
+At the end, it will display the number of correct answers, incorrect answers, and an option to restart the game.
